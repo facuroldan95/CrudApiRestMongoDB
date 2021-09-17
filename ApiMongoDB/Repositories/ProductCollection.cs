@@ -26,22 +26,26 @@ namespace ApiMongoDB.Repositories
 
 		public async Task<List<Product>> GetAllProducts()
 		{
-			throw new NotImplementedException();
+			return await Collection.FindAsync(new BsonDocument()).Result.ToListAsync();
 		}
 
 		public async Task<Product> GetProductById(string id)
 		{
-			throw new NotImplementedException();
+			return await Collection.FindAsync(
+				new BsonDocument { { "_id", new ObjectId(id) }  }).Result.FirstAsync();
 		}
 
 		public async Task InsertProcuct(Product product)
 		{
-			throw new NotImplementedException();
+			await Collection.InsertOneAsync(product);
 		}
 
 		public async Task UpdateProduct(Product product)
 		{
-			throw new NotImplementedException();
+			var filter = Builders<Product>
+				.Filter
+				.Eq(p => p.Id, product.Id);
+			await Collection.ReplaceOneAsync(filter, product);
 		}
 	}
 }
